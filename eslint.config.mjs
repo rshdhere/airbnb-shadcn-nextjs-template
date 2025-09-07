@@ -1,6 +1,6 @@
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
+import { dirname, resolve } from 'path';
+import { fileURLToPath } from 'url';
+import { FlatCompat } from '@eslint/eslintrc';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -9,17 +9,67 @@ const compat = new FlatCompat({
   baseDirectory: __dirname,
 });
 
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
+export default [
+  // 1. Ignore patterns first
   {
     ignores: [
-      "node_modules/**",
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
+      'node_modules/**',
+      '.next/**',
+      'out/**',
+      'build/**',
+      'next-env.d.ts',
+      '.turbo/**',
+      'dist/**',
+      '*.config.mjs',
+      '*.config.js',
     ],
   },
-];
 
-export default eslintConfig;
+  // 2. Apply Next + Airbnb + TypeScript
+  ...compat.extends(
+    'next/core-web-vitals',
+    'airbnb',
+    'airbnb/hooks',
+    'airbnb-typescript',
+  ),
+
+  // 3. Add parserOptions.project (needed for airbnb-typescript)
+  ...compat.config({
+    parserOptions: {
+      project: resolve(__dirname, './tsconfig.json'),
+      tsconfigRootDir: __dirname,
+    },
+  }),
+
+  // 4. overrides for pages vs components
+  {
+    files: ['pages/**/*.{ts,tsx,js,jsx}'],
+    rules: {
+      'react/function-component-definition': [
+        'error',
+        { namedComponents: 'function-declaration' },
+      ],
+    },
+  },
+  {
+    files: ['components/**/*.{ts,tsx,js,jsx}'],
+    rules: {
+      'react/function-component-definition': [
+        'error',
+        { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
+      ],
+    },
+  },
+
+  // 5. Custom rules / fixes
+  {
+    rules: {
+      '@typescript-eslint/brace-style': 'off',
+      'brace-style': ['error', '1tbs', { allowSingleLine: true }],
+      'import/extensions': ['error', 'ignorePackages', { ts: 'never', tsx: 'never' }],
+      'react/react-in-jsx-scope': 'off',
+      'react/jsx-props-no-spreading': 'off',
+      'no-console': 'warn',
+    },
+  },
+];
