@@ -42,22 +42,16 @@ export default [
     },
   }),
 
-  // 4. overrides for pages vs components
+  // 4. overrides for arrow functions for making shadcn like components
   {
-    files: ['pages/**/*.{ts,tsx,js,jsx}'],
+    files: ['app/**/*.{ts,tsx,js,jsx}', 'components/**/*.{ts,tsx,js,jsx}'],
     rules: {
       'react/function-component-definition': [
         'error',
-        { namedComponents: 'function-declaration' },
-      ],
-    },
-  },
-  {
-    files: ['components/**/*.{ts,tsx,js,jsx}'],
-    rules: {
-      'react/function-component-definition': [
-        'error',
-        { namedComponents: 'arrow-function', unnamedComponents: 'arrow-function' },
+        {
+          namedComponents: ['function-declaration', 'arrow-function'],
+          unnamedComponents: 'arrow-function',
+        },
       ],
     },
   },
@@ -67,9 +61,14 @@ export default [
     rules: {
       '@typescript-eslint/brace-style': 'off',
       'brace-style': ['error', '1tbs', { allowSingleLine: true }],
-      'import/extensions': ['error', 'ignorePackages', { ts: 'never', tsx: 'never' }],
+      'import/extensions': [
+        'error',
+        'ignorePackages',
+        { ts: 'never', tsx: 'never' },
+      ],
       'react/react-in-jsx-scope': 'off',
       'react/jsx-props-no-spreading': 'off',
+      'react/require-default-props': 'off',
       'no-console': 'warn',
     },
   },
