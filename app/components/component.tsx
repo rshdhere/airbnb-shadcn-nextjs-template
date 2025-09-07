@@ -1,4 +1,5 @@
 import React from 'react';
+import cn from '@/lib/utils';
 
 const New = ({
   className,
@@ -9,7 +10,7 @@ const New = ({
   children: React.ReactNode;
 } & React.LabelHTMLAttributes<HTMLLabelElement>) => {
   return (
-    <label {...props} htmlFor="dad" className={className}>
+    <label {...props} htmlFor="dad" className={cn('m-12 p-10', className)}>
       {children}
     </label>
   );
@@ -18,7 +19,7 @@ const New = ({
 export default function Component() {
   return (
     <div>
-      <New> hii there</New>
+      <New>hii there</New>
     </div>
   );
 }

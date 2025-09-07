@@ -1,5 +1,10 @@
 import React from 'react';
+import Component from '@/components/component';
 
 export default function Home() {
-  return <div>hell</div>;
+  return (
+    <div>
+      <Component />
+    </div>
+  );
 }
